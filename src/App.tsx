@@ -1,12 +1,18 @@
 import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Add from "./pages/Add";
 
 const App: React.FC = () => {
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold text-blue-600">
-        Welcome to React + TypeScript + Tailwind CSS project!
-      </h1>
-    </div>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/add" element={<Add />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 };
 
