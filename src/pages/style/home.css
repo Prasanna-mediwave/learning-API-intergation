@@ -4,8 +4,11 @@ header {
 .header-text {
   @apply text-[#3C486B] text-2xl max-[719px]:pb-5 max-[719px]:text-center;
 }
+.search-box {
+  @apply flex justify-center items-center px-4 bg-[#F0F0F0] text-2xl rounded-full;
+}
 .search-box input {
-  @apply p-3 rounded-full min-[720px]:w-[500px] max-[719px]:w-full bg-[#F0F0F0];
+  @apply py-3 rounded-full min-[720px]:w-[500px] max-[719px]:w-full bg-transparent outline-none;
 }
 .main-container {
   @apply w-[90%] min-[1200px]:w-[80%] m-auto mt-14 grid min-[1650px]:grid-cols-4 min-[1074px]:grid-cols-3 min-[720px]:grid-cols-2 justify-center items-center gap-y-12;
@@ -17,8 +20,40 @@ header {
   @apply w-80 h-96 rounded-3xl bg-[#F9D949] p-5;
 }
 .card-img img {
-  @apply w-[280px] h-[280px] rounded-full m-auto object-cover border-8 border-[#F45050];
+  @apply w-[280px] h-[280px] rounded-full m-auto object-cover border-8 border-[#F45050] bg-[#F0F0F0];
 }
 .card-detial {
   @apply text-center p-5;
+}
+.modal-overlay {
+  @apply fixed top-0 left-0 w-full h-full bg-[#3C486B]/50 z-10 flex justify-center items-center;
+}
+.modal {
+  @apply w-3/4 h-[84%] rounded-3xl shadow-lg bg-[#F0F0F0] p-5 overflow-auto;
+}
+.card-header {
+  @apply flex justify-between items-center;
+}
+.close-btn {
+  @apply text-6xl rotate-45;
+}
+
+.head-text {
+  @apply text-2xl bg-[#F9D949] text-[#3C486B];
+}
+.text-profile p {
+  @apply text-xl p-1 border border-[#000];
+}
+.outer-container {
+  @apply grid grid-cols-3;
+}
+.outer2-container {
+  @apply grid grid-cols-2;
+}
+.outer-container p,
+.outer2-container p {
+  @apply text-xl p-1 border border-[#000];
+}
+.img-container img {
+  @apply m-3 w-36 h-36 rounded-full border-8 border-[#F45050] bg-[#F9D949] object-cover;
 }
