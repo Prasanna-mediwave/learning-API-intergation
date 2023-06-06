@@ -28,7 +28,7 @@ const Home = () => {
       dispatch({
         type: "USER_CARD",
         field: "userDetial",
-        payload: res.data.users.slice(limit.skip, limit.skip + 5),
+        payload: res.data.users,
       });
     });
   }, [limit]);
@@ -41,7 +41,6 @@ const Home = () => {
       });
     }
   };
-  console.log(limit);
 
   const prevHandler = () => {
     if (limit.skip > 0) {
@@ -54,29 +53,9 @@ const Home = () => {
   };
   const searchHandle = (e: any) => {
     setText(e.target.value);
-    if (e.target.value.length > 0) {
-      axios
-        .get(`https://dummyjson.com/users/search?q=${e.target.value}`)
-        .then((res) => {
-          console.log(res.data);
-
-          dispatch({
-            type: "USER_CARD",
-            field: "userDetial",
-            payload: res.data.users,
-          });
-        });
-    }
   };
   const closeHandler = () => {
     setText("");
-    axios.get("https://dummyjson.com/users").then((res) => {
-      dispatch({
-        type: "USER_CARD",
-        field: "userDetial",
-        payload: res.data.users.slice(limit.skip, limit.skip + 5),
-      });
-    });
   };
 
   return (
@@ -112,43 +91,47 @@ const Home = () => {
               +
             </motion.div>
             {state.userDetial &&
-              state.userDetial.map((item: any) => (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{
-                    scale: state.showDetial ? 2 : 1,
-                    opacity: state.showDetial ? 0 : 1,
-                  }}
-                  className="card-container"
-                  key={item.id}
-                  onClick={() => {
-                    axios
-                      .get(`https://dummyjson.com/users/${item.id}`)
-                      .then((res) => {
-                        dispatch({
-                          type: "USER_CARD",
-                          field: "singleDetial",
-                          payload: res.data,
-                        });
+              state.userDetial
+                .filter((item: any) => {
+                  return text.toLowerCase() === ""
+                    ? item
+                    : item.firstName.toLowerCase().includes(text) ||
+                        item.lastName.toLowerCase().includes(text);
+                })
+                .slice(limit.skip, limit.skip + 5)
+                .map((item: any) => (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{
+                      scale: state.showDetial ? 2 : 1,
+                      opacity: state.showDetial ? 0 : 1,
+                    }}
+                    className="card-container"
+                    key={item.id}
+                    onClick={() => {
+                      dispatch({
+                        type: "USER_CARD",
+                        field: "singleDetial",
+                        payload: item,
                       });
-                    dispatch({
-                      type: "USER_CARD",
-                      field: "showDetial",
-                      payload: !state.showDetial,
-                    });
-                  }}
-                >
-                  <div className="card-img">
-                    <img src={item.image} alt={item.firstName} />
-                  </div>
-                  <div className="card-detial">
-                    <div>
-                      {item.firstName}&nbsp;{item.lastName}
+                      dispatch({
+                        type: "USER_CARD",
+                        field: "showDetial",
+                        payload: !state.showDetial,
+                      });
+                    }}
+                  >
+                    <div className="card-img">
+                      <img src={item.image} alt={item.firstName} />
                     </div>
-                    <div>{item.email}</div>
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="card-detial">
+                      <div>
+                        {item.firstName}&nbsp;{item.lastName}
+                      </div>
+                      <div>{item.email}</div>
+                    </div>
+                  </motion.div>
+                ))}
           </div>
           <div className="flex justify-between my-5 items-center">
             <motion.button
