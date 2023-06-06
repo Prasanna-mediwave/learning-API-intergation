@@ -11,13 +11,19 @@ header {
   @apply py-3 rounded-full min-[720px]:w-[500px] max-[719px]:w-full bg-transparent outline-none;
 }
 .main-container {
-  @apply w-[90%] min-[1200px]:w-[80%] m-auto mt-14 grid min-[1650px]:grid-cols-4 min-[1074px]:grid-cols-3 min-[720px]:grid-cols-2 justify-center items-center gap-y-12;
+  @apply w-[90%] min-[1200px]:w-[80%] m-auto my-14;
+}
+.inner-container {
+  @apply grid  min-[1074px]:grid-cols-3 min-[720px]:grid-cols-2 justify-center items-center gap-y-12;
 }
 .Add-btn {
-  @apply w-[280px] h-[280px] flex justify-center items-center bg-[#F0F0F0] cursor-pointer text-[100px] text-[#F9D949] rounded-full border-8 border-[#F9D949];
+  @apply m-auto w-[280px] h-[280px] flex justify-center items-center bg-[#F0F0F0] cursor-pointer text-[100px] text-[#F9D949] rounded-full border-8 border-[#F9D949];
+}
+.next-prev-btn {
+  @apply p-4 text-sm bg-[#F9D949] text-[#3C486B] rounded-full;
 }
 .card-container {
-  @apply w-80 h-96 rounded-3xl bg-[#F9D949] p-5;
+  @apply w-80 h-96 rounded-3xl bg-[#F9D949] p-5 m-auto;
 }
 .card-img img {
   @apply w-[280px] h-[280px] rounded-full m-auto object-cover border-8 border-[#F45050] bg-[#F0F0F0];

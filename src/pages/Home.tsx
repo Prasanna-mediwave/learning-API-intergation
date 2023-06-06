@@ -10,7 +10,8 @@ const initialstate = {
 };
 
 const Home = () => {
-  const ApiFunction = (state: any, action: any) => {
+  // userReducer
+  const reducerFunction = (state: any, action: any) => {
     switch (action.type) {
       case "USER_CARD":
         return { ...state, [action.field]: action.payload };
@@ -19,19 +20,38 @@ const Home = () => {
     }
   };
 
-  const [state, dispatch] = useReducer(ApiFunction, initialstate);
+  const [state, dispatch] = useReducer(reducerFunction, initialstate);
   const [text, setText] = useState("");
-
+  const [limit, setLimit] = useState({ skip: 0, page: 0 });
   useEffect(() => {
-    axios.get("https://dummyjson.com/users").then((res) => {
+    axios.get(`https://dummyjson.com/users`).then((res) => {
       dispatch({
         type: "USER_CARD",
         field: "userDetial",
-        payload: res.data.users,
+        payload: res.data.users.slice(limit.skip, limit.skip + 5),
       });
     });
-  }, []);
+  }, [limit]);
+  const nextHandler = () => {
+    if (limit.skip < 25) {
+      setLimit({
+        ...limit,
+        page: limit.page + 1,
+        skip: limit.skip + 5,
+      });
+    }
+  };
+  console.log(limit);
 
+  const prevHandler = () => {
+    if (limit.skip > 0) {
+      setLimit({
+        ...limit,
+        page: limit.page - 1,
+        skip: limit.skip - 5,
+      });
+    }
+  };
   const searchHandle = (e: any) => {
     setText(e.target.value);
     if (e.target.value.length > 0) {
@@ -54,7 +74,7 @@ const Home = () => {
       dispatch({
         type: "USER_CARD",
         field: "userDetial",
-        payload: res.data.users,
+        payload: res.data.users.slice(limit.skip, limit.skip + 5),
       });
     });
   };
@@ -78,56 +98,91 @@ const Home = () => {
           </div>
         </div>
       </header>
-      <div className="main-container">
-        <motion.div
-          className="Add-btn"
-          initial={{ scale: 0 }}
-          animate={{
-            scale: state.showDetial ? 2 : 1,
-            opacity: state.showDetial ? 0 : 1,
-          }}
-        >
-          +
-        </motion.div>
-        {state.userDetial &&
-          state.userDetial.map((item: any) => (
+      {state.userDetial.length > 0 ? (
+        <div className="main-container">
+          <div className="inner-container">
             <motion.div
+              className="Add-btn"
               initial={{ scale: 0 }}
               animate={{
                 scale: state.showDetial ? 2 : 1,
                 opacity: state.showDetial ? 0 : 1,
               }}
-              className="card-container"
-              key={item.id}
-              onClick={() => {
-                axios
-                  .get(`https://dummyjson.com/users/${item.id}`)
-                  .then((res) => {
+            >
+              +
+            </motion.div>
+            {state.userDetial &&
+              state.userDetial.map((item: any) => (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{
+                    scale: state.showDetial ? 2 : 1,
+                    opacity: state.showDetial ? 0 : 1,
+                  }}
+                  className="card-container"
+                  key={item.id}
+                  onClick={() => {
+                    axios
+                      .get(`https://dummyjson.com/users/${item.id}`)
+                      .then((res) => {
+                        dispatch({
+                          type: "USER_CARD",
+                          field: "singleDetial",
+                          payload: res.data,
+                        });
+                      });
                     dispatch({
                       type: "USER_CARD",
-                      field: "singleDetial",
-                      payload: res.data,
+                      field: "showDetial",
+                      payload: !state.showDetial,
                     });
-                  });
-                dispatch({
-                  type: "USER_CARD",
-                  field: "showDetial",
-                  payload: !state.showDetial,
-                });
-              }}
+                  }}
+                >
+                  <div className="card-img">
+                    <img src={item.image} alt={item.firstName} />
+                  </div>
+                  <div className="card-detial">
+                    <div>
+                      {item.firstName}&nbsp;{item.lastName}
+                    </div>
+                    <div>{item.email}</div>
+                  </div>
+                </motion.div>
+              ))}
+          </div>
+          <div className="flex justify-between my-5 items-center">
+            <motion.button
+              whileHover={{ scale: limit.skip > 0 ? 1.2 : 1 }}
+              whileTap={{ scale: limit.skip > 0 ? 0.8 : 1 }}
+              type="button"
+              className={`next-prev-btn ${
+                limit.skip > 0 ? "opacity-100" : "opacity-50"
+              }`}
+              onClick={prevHandler}
             >
-              <div className="card-img">
-                <img src={item.image} alt={item.firstName} />
-              </div>
-              <div className="card-detial">
-                <div>
-                  {item.firstName}&nbsp;{item.lastName}
-                </div>
-                <div>{item.email}</div>
-              </div>
-            </motion.div>
-          ))}
-      </div>
+              Prev
+            </motion.button>
+            <p className="flex justify-center items-center p-4 text-xs bg-[#F9D949] text-[#3C486B] font-bold rounded-lg">
+              Page - {limit.page}
+            </p>
+            <motion.button
+              whileHover={{ scale: limit.skip < 25 ? 1.2 : 1 }}
+              whileTap={{ scale: limit.skip < 25 ? 0.8 : 1 }}
+              type="button"
+              className={`next-prev-btn ${
+                limit.skip < 25 ? " opacity-100" : "opacity-50"
+              }`}
+              onClick={nextHandler}
+            >
+              Next
+            </motion.button>
+          </div>
+        </div>
+      ) : (
+        <div className="main-container">
+          <div className="text-[#F9D949] text-center text-2xl">Loading...</div>
+        </div>
+      )}
       <AnimatePresence>
         {state.showDetial && (
           <motion.div
